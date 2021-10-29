@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertar Personaje</title>
+    <link href='css/bootstrap.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <div id="menu"></div>
+    <div class='container mt-5 bg-secondary text-light p-4 border border-dark'>
+        <form>
+            <div class='mb-3 form-group row'>
+                <label>Introducir Nombre: </label>
+                <input type='text' class='form-control' id='cajaNombre' />
+            </div>
+            <div class='mb-3 form-group row'>
+                <label>Imagen: </label>
+                <input type='text' class='form-control' id='cajaImagen' />
+            </div>
+            <div class='mb-3 form-group row'>
+                <label>Serie: </label>
+                <select class='form-control' id='selectSeries'>
+
+                </select>
+            </div>
+            <button class='btn btn-warning ' id='Apostar'>Insertar Personaje</button>
+        </form>
+    </div>
+    <script src='jquery-3.6.0.min.js'></script>
+    <script>
+        $(document).ready(function () {
+            $("#menu").load("./MenuSeries.html");
+            var urlseries = 'https://apiseriespersonajes.azurewebsites.net';
+            var request = '/api/Series';
+            cargarSeries();
+
+            $('form').submit(function (e) {
+                e.preventDefault();
+
+                var nom = $('#cajaNombre').val();
+                var img = $('#cajaImagen').val();
+                var ser = parseInt($('#selectSeries').val());
+
+                var personaje = new Object();
+
+                personaje = {
+                    idPersonaje: 0,
+                    nombre: nom,
+                    imagen: img,
+                    idSerie: ser
+                }
+
+                console.log(personaje);
+                var json = JSON.stringify(personaje);
+
+                var urlseries = 'https://apiseriespersonajes.azurewebsites.net';
+                var request = '/api/Personajes';
+
+                $.ajax({
+                    'url': urlseries + request,
+                    'type': 'POST',
+                    'data': json,
+                    'contentType': 'application/json',
+                    success: function () {
+                        window.location.replace("./Personajes.html?idSer=" + ser);
+                    }
+                });
+
+            });
+
+            function cargarSeries() {
+                $.ajax({
+                    'url': urlseries + request,
+                    'type': 'GET',
+                    success: function (data) {
+                        $.each(data, function (index, ser) {
+
+                            var option = $('<option>', {
+                                'text': ser.nombre,
+                                'value': ser.idSerie
+                            })
+
+                            $('#selectSeries').append(option);
+
+                        });
+                    }
+
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

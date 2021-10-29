@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link href='./css/bootstrap.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-ligh mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="./Home.html">Series</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./NuevoPersonaje.html">Nuevo personaje</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./ModificarPersonaje.html">Modificar personaje</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Series
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id='listaSeries'>
+
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <script src='jquery-3.6.0.min.js'></script>
+    <script src='js/bootstrap.bundle.min.js'></script>
+    <script>
+        $(document).ready(function () {
+            var urlseries = 'https://apiseriespersonajes.azurewebsites.net';
+            var request = '/api/Series';
+
+            $.ajax({
+                'url': urlseries + request,
+                'type': 'GET',
+                success: function (data) {
+                    $.each(data, function (index, ser) {
+                        var li = $('<li>');
+                        var a = $('<a>', {
+                            text: ser.nombre,
+                            href: './DetallesSerie.html?id=' + ser.idSerie,
+                            class: 'dropdown-item'
+                        });
+
+
+                        li.append(a);
+
+                        $('#listaSeries').append(li);
+
+                    });
+                }
+
+            })
+        });
+    </script>
+</body>
+
+</html>

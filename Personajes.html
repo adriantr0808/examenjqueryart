@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personajes</title>
+    <link href='css/bootstrap.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <div id="menu"></div>
+    <div class='container m-auto m-5'>
+        <div id="botonVolver"></div>
+        <table class='table table-dark table-striped text-center m-auto'>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Imagen</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <script src='jquery-3.6.0.min.js'></script>
+    <script>
+        $(document).ready(function () {
+            $("#menu").load("./MenuSeries.html");
+            var queryString = window.location.search;
+            var urlParams = new URLSearchParams(queryString);
+            var idSerie = urlParams.get('idSer');
+            console.log(idSerie)
+            var urlseries = 'https://apiseriespersonajes.azurewebsites.net';
+            var request = '/api/Series/PersonajesSerie/' + idSerie;
+            var boton = $('<button>', {
+                'text': 'Volver',
+                'class': 'btn btn-danger mb-3'
+            });
+            $.ajax({
+                'url': urlseries + request,
+                'type': 'GET',
+                success: function (data) {
+                    //console.log(data)
+                    $.each(data, function (index, ser) {
+                        var tr = $('<tr>');
+                        var tdnombre = $('<td>', {
+                            'text': ser.nombre
+                        });
+                        var tdimg = $('<td>');
+
+                        var img = $('<img>', {
+                            'src': ser.imagen,
+                            'width': 'auto',
+                            'height': '200px'
+                        });
+
+
+                        boton.click(function () {
+                            window.location.replace("./DetallesSerie.html?id=" +
+                                ser.idSerie);
+                        });
+
+
+
+                        tdimg.append(img);
+                        tr.append(tdnombre);
+                        tr.append(tdimg);
+
+
+                        $('.table tbody').append(tr);
+                    })
+                }
+            });
+
+            $('#botonVolver').append(boton);
+
+
+        });
+    </script>
+</body>
+
+</html>
